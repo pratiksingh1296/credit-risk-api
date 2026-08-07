@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Path
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -67,4 +68,32 @@ def calculator(a: int, b:int):
         "a" : a,
         "b" : b,
         "sum": a+b
+    }
+
+############ POST ###################
+
+class Book(BaseModel):
+    title: str
+    author: str
+    pages: int
+
+@app.post("/book")
+def create_book(book: Book):
+    return {
+        "message": "Book received!",
+        "book": book
+    }
+
+
+class Student(BaseModel):
+    name: str
+    age: int
+    course: str
+    gpa: float
+
+@app.post("/create-student")
+def create_student(student: Student):
+    return {
+        "message": "Student registered.",
+        "student": student
     }
