@@ -15,18 +15,45 @@ The inference pipeline reconstructs the engineered features used during
 training, applies the fitted preprocessing pipeline, and passes the
 result to the calibrated XGBoost model.
 
+### Running Locally
 
-### Run locally
+Install dependencies:
 
 ```bash
+pip install -r requirements.txt
+```
+
+Start the API:
+```bash
 uvicorn main:app --reload
+```
 
 The API will be available at:
 http://127.0.0.1:8000
 
 Interactive API documentation:
 http://127.0.0.1:8000/docs
+
+
+### Running with Docker
+
+Build the Docker image:
+
+```bash
+docker build -t credit-risk-api .
 ```
+
+Run the container:
+```bash
+docker run -d -p 8000:8000 --name credit-risk-api-container credit-risk-api
+```
+
+The API will be available at:
+http://127.0.0.1:8000
+
+Interactive API documentation:
+http://127.0.0.1:8000/docs
+
 
 ### Endpoints 
 
