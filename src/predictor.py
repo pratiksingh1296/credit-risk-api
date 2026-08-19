@@ -1,6 +1,7 @@
 import joblib
 import pandas as pd
 import numpy as np
+import shap
 from src.schemas import CreditRiskRequest
 
 # Load Necessary Data
@@ -23,6 +24,7 @@ median_row = pd.read_csv("models/app_median_row.csv")
 
 # Model
 model = joblib.load("models/xgb_calibrated.joblib")
+xgb_model = joblib.load("models/xgb_model.joblib")
 
 
 # Feature helper
@@ -164,3 +166,25 @@ def predict_credit_risk(request: CreditRiskRequest):
         "risk_level": risk_level,
         "decision": decision
     }
+
+
+def explain_credit_risk(request: CreditRiskRequest):
+
+    input_row = build_features(request)
+
+    input_processed = preprocessor.transform(input_row)
+
+    feature_names = preprocessor.get_feature_names_out()
+    clean_names = [name.split("__", 1)[-1] for name in feature_names]
+
+    input_df = pd.DataFrame(input_processed,columns=clean_names)
+
+    explainer = shap.TreeExplainer(xgb_model)
+    shap_values = explainer.shap_values(input_df)
+
+    return {
+        "feature_names": clean_names,
+        "shap_values": shap_values[0].tolist(),
+        "base_value": float(explainer.expected_value)
+    }
+

@@ -86,3 +86,12 @@ class CreditRiskResponse(BaseModel):
         "Manual Review",
         "Reject"
     ]
+
+
+# Metadata Response
+class MetadataResponse(BaseModel):
+    income_types: list[str]
+    organization_types: list[str]
+    education_types: list[str]
+    loan_types: list[str]
+    marital_statuses: list[str]
