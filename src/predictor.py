@@ -7,7 +7,6 @@ from src.schemas import CreditRiskRequest
 # Load Necessary Data
 
 # maps
-preprocessor = joblib.load("models/preprocessor_fit.joblib")
 org_risk_map = joblib.load("models/org_risk_map.joblib")
 income_map = joblib.load("models/income_map.joblib")
 income_risk_map = joblib.load("models/income_risk_map.joblib")
@@ -19,10 +18,14 @@ education_map = {
     "Academic degree": 4
 }
 
+income_risk_default = sum(income_risk_map.values()) / len(income_risk_map)
+org_risk_default = sum(org_risk_map.values()) / len(org_risk_map)
+
 # Median data
 median_row = pd.read_csv("models/app_median_row.csv")
 
 # Model
+preprocessor = joblib.load("models/preprocessor_fit.joblib")
 model = joblib.load("models/xgb_calibrated.joblib")
 xgb_model = joblib.load("models/xgb_model.joblib")
 
@@ -122,12 +125,12 @@ def build_features(request: CreditRiskRequest):
     # Target-encoded risk features
     input_row["INCOME_RISK"] = income_risk_map.get(
         income_group,
-        income_risk_map.mean()
+        income_risk_default
     )
 
     input_row["ORG_RISK"] = org_risk_map.get(
         request.organization_type,
-        org_risk_map.mean()
+        org_risk_default
     )
 
     input_row = input_row.reindex(columns=preprocessor.feature_names_in_)

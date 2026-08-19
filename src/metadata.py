@@ -7,7 +7,7 @@ income_map = joblib.load("models/income_map.joblib")
 
 INCOME_TYPES =  sorted(income_map.keys())
 
-ORGANIZATION_TYPES = sorted(org_risk_map.index.tolist())
+ORGANIZATION_TYPES = sorted(org_risk_map)
 
 
 EDUCATION_TYPES = [

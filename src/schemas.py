@@ -7,7 +7,7 @@ income_map = joblib.load("models/income_map.joblib")
 org_risk_map = joblib.load("models/org_risk_map.joblib")
 
 income_types = sorted(income_map.keys())
-organization_types = sorted(org_risk_map.index.tolist())
+organization_types = sorted(org_risk_map)
 
 # Pydantic Schema
 class CreditRiskRequest(BaseModel):
